@@ -1,0 +1,402 @@
+[
+  {
+    "id": "ASR-001",
+    "group": "clean",
+    "audio_file": "clean_01.wav",
+    "ground_truth": "你好我上周五买的降噪耳机订单号是ORD202610018848右耳充不进电申请换货",
+    "intent": "repair",
+    "speaker": "spk_01",
+    "description": "标准普通话，耳机硬件故障换新",
+    "file_path": "dataset/asr/audio/clean_01.wav"
+  },
+  {
+    "id": "ASR-002",
+    "group": "clean",
+    "audio_file": "clean_02.wav",
+    "ground_truth": "请问我的快递单号SF1092837465物流两天没动静了能帮我催一下吗",
+    "intent": "logistics",
+    "speaker": "spk_02",
+    "description": "物流停滞催单",
+    "file_path": "dataset/asr/audio/clean_02.wav"
+  },
+  {
+    "id": "ASR-003",
+    "group": "clean",
+    "audio_file": "clean_03.wav",
+    "ground_truth": "刚收到商品发现买错颜色了包装完全没拆我想申请七天无理由退货",
+    "intent": "return",
+    "speaker": "spk_03",
+    "description": "未拆封七天无理由退货",
+    "file_path": "dataset/asr/audio/clean_03.wav"
+  },
+  {
+    "id": "ASR-004",
+    "group": "clean",
+    "audio_file": "clean_04.wav",
+    "ground_truth": "我的电饭煲买了大半年了最近不加热了还在保修期内吗怎么送修",
+    "intent": "repair",
+    "speaker": "spk_04",
+    "description": "保修期内寄修咨询",
+    "file_path": "dataset/asr/audio/clean_04.wav"
+  },
+  {
+    "id": "ASR-005",
+    "group": "clean",
+    "audio_file": "clean_05.wav",
+    "ground_truth": "手机不小心掉地上屏幕摔碎了能免费保修吗你们网点在哪里",
+    "intent": "repair",
+    "speaker": "spk_05",
+    "description": "人为损坏屏幕保修咨询",
+    "file_path": "dataset/asr/audio/clean_05.wav"
+  },
+  {
+    "id": "ASR-006",
+    "group": "clean",
+    "audio_file": "clean_06.wav",
+    "ground_truth": "顺丰快递员没打电话直接把我的快递放代收点了麻烦让他重新派送一下",
+    "intent": "logistics",
+    "speaker": "spk_06",
+    "description": "未送货上门重新派送",
+    "file_path": "dataset/asr/audio/clean_06.wav"
+  },
+  {
+    "id": "ASR-007",
+    "group": "clean",
+    "audio_file": "clean_07.wav",
+    "ground_truth": "衣服尺码太小了我想换大一码请问运费险是怎么理赔的",
+    "intent": "return",
+    "speaker": "spk_07",
+    "description": "尺码不合与运费险咨询",
+    "file_path": "dataset/asr/audio/clean_07.wav"
+  },
+  {
+    "id": "ASR-008",
+    "group": "clean",
+    "audio_file": "clean_08.wav",
+    "ground_truth": "订单号ORD202609201122键盘按键连击失灵要求换货处理",
+    "intent": "repair",
+    "speaker": "spk_08",
+    "description": "键盘按键硬件故障",
+    "file_path": "dataset/asr/audio/clean_08.wav"
+  },
+  {
+    "id": "ASR-009",
+    "group": "clean",
+    "audio_file": "clean_09.wav",
+    "ground_truth": "收到的包裹外箱严重变形破损里面的水杯都压碎了我要拒收退货",
+    "intent": "return",
+    "speaker": "spk_09",
+    "description": "运输破损拒收退货",
+    "file_path": "dataset/asr/audio/clean_09.wav"
+  },
+  {
+    "id": "ASR-010",
+    "group": "clean",
+    "audio_file": "clean_10.wav",
+    "ground_truth": "我想改一下收货地址原地址写错了现在包裹刚发出还在分拨中心",
+    "intent": "logistics",
+    "speaker": "spk_10",
+    "description": "在途快递修改配送地址",
+    "file_path": "dataset/asr/audio/clean_10.wav"
+  },
+  {
+    "id": "ASR-011",
+    "group": "clean",
+    "audio_file": "clean_11.wav",
+    "ground_truth": "我买的吸尘器电机异响发热严重请问售后检测报告需要多久出",
+    "intent": "repair",
+    "speaker": "spk_01",
+    "description": "电机异响售后检测周期",
+    "file_path": "dataset/asr/audio/clean_11.wav"
+  },
+  {
+    "id": "ASR-012",
+    "group": "clean",
+    "audio_file": "clean_12.wav",
+    "ground_truth": "赠品耳机没有收到主商品到了请补发赠品或者部分退款",
+    "intent": "return",
+    "speaker": "spk_02",
+    "description": "漏发赠品补发申请",
+    "file_path": "dataset/asr/audio/clean_12.wav"
+  },
+  {
+    "id": "ASR-013",
+    "group": "clean",
+    "audio_file": "clean_13.wav",
+    "ground_truth": "派送时效承诺次日达现在已经超时两天了需要按照时效赔付",
+    "intent": "logistics",
+    "speaker": "spk_03",
+    "description": "时效超时赔付申诉",
+    "file_path": "dataset/asr/audio/clean_13.wav"
+  },
+  {
+    "id": "ASR-014",
+    "group": "clean",
+    "audio_file": "clean_14.wav",
+    "ground_truth": "已经寄回退货商品了快递单号是YT882910293为什么还没退款",
+    "intent": "return",
+    "speaker": "spk_04",
+    "description": "退货已寄回退款进度",
+    "file_path": "dataset/asr/audio/clean_14.wav"
+  },
+  {
+    "id": "ASR-015",
+    "group": "clean",
+    "audio_file": "clean_15.wav",
+    "ground_truth": "智能手表进水了不开机官方保修条款里游泳进水算质保范围吗",
+    "intent": "repair",
+    "speaker": "spk_05",
+    "description": "防水等级与进水保修判定",
+    "file_path": "dataset/asr/audio/clean_15.wav"
+  },
+  {
+    "id": "ASR-016",
+    "group": "clean",
+    "audio_file": "clean_16.wav",
+    "ground_truth": "快递状态显示已签收但我本人没有收到请核实代签收人是谁",
+    "intent": "logistics",
+    "speaker": "spk_06",
+    "description": "虚假签收冒领核实",
+    "file_path": "dataset/asr/audio/clean_16.wav"
+  },
+  {
+    "id": "ASR-017",
+    "group": "clean",
+    "audio_file": "clean_17.wav",
+    "ground_truth": "音箱蓝牙经常断连重置后依然无法连接申请技术人员协助或者换货",
+    "intent": "repair",
+    "speaker": "spk_07",
+    "description": "蓝牙连接故障协助",
+    "file_path": "dataset/asr/audio/clean_17.wav"
+  },
+  {
+    "id": "ASR-018",
+    "group": "clean",
+    "audio_file": "clean_18.wav",
+    "ground_truth": "收到商品与页面描述严重不符材质不一样要求退一赔三",
+    "intent": "return",
+    "speaker": "spk_08",
+    "description": "货不对板退货争议",
+    "file_path": "dataset/asr/audio/clean_18.wav"
+  },
+  {
+    "id": "ASR-019",
+    "group": "clean",
+    "audio_file": "clean_19.wav",
+    "ground_truth": "请问自提柜取件码过期了怎么重新获取短信验证码",
+    "intent": "logistics",
+    "speaker": "spk_09",
+    "description": "自提柜取件码重新获取",
+    "file_path": "dataset/asr/audio/clean_19.wav"
+  },
+  {
+    "id": "ASR-020",
+    "group": "clean",
+    "audio_file": "clean_20.wav",
+    "ground_truth": "咖啡机使用了五天漏水严重配件齐全申请原路退回全额退款",
+    "intent": "return",
+    "speaker": "spk_10",
+    "description": "质量问题七天内全额退款",
+    "file_path": "dataset/asr/audio/clean_20.wav"
+  },
+  {
+    "id": "ASR-021",
+    "group": "noisy",
+    "audio_file": "noisy_01.wav",
+    "ground_truth": "喂声音有点吵我耳机充不上电订单号ORD202610018848麻烦换一个",
+    "intent": "repair",
+    "speaker": "spk_11",
+    "description": "背景嘈杂环境，耳机充电故障",
+    "file_path": "dataset/asr/audio/noisy_01.wav"
+  },
+  {
+    "id": "ASR-022",
+    "group": "noisy",
+    "audio_file": "noisy_02.wav",
+    "ground_truth": "听得清吗我在地铁里那个快递SF1092837465怎么一直卡在武汉分拨",
+    "intent": "logistics",
+    "speaker": "spk_12",
+    "description": "地铁背景音，物流转运停滞",
+    "file_path": "dataset/asr/audio/noisy_02.wav"
+  },
+  {
+    "id": "ASR-023",
+    "group": "noisy",
+    "audio_file": "noisy_03.wav",
+    "ground_truth": "风声很大我就想问退货的话运费到底是谁承担啊我退货单提交了",
+    "intent": "return",
+    "speaker": "spk_13",
+    "description": "户外风噪，退货运费承担政策",
+    "file_path": "dataset/asr/audio/noisy_03.wav"
+  },
+  {
+    "id": "ASR-024",
+    "group": "noisy",
+    "audio_file": "noisy_04.wav",
+    "ground_truth": "喂你好洗碗机漏水你们维修师傅什么时候上门家里全是水",
+    "intent": "repair",
+    "speaker": "spk_14",
+    "description": "流水背景声，紧急漏水上门维修",
+    "file_path": "dataset/asr/audio/noisy_04.wav"
+  },
+  {
+    "id": "ASR-025",
+    "group": "noisy",
+    "audio_file": "noisy_05.wav",
+    "ground_truth": "我买的剃须刀刀头钝了能不能只换刀头不要整机寄回去",
+    "intent": "repair",
+    "speaker": "spk_15",
+    "description": "低信噪比，单独配件更换申请",
+    "file_path": "dataset/asr/audio/noisy_05.wav"
+  },
+  {
+    "id": "ASR-026",
+    "group": "noisy",
+    "audio_file": "noisy_06.wav",
+    "ground_truth": "快递小哥把东西扔门口丢了你们赶快赔偿订单号ORD202609253344",
+    "intent": "logistics",
+    "speaker": "spk_16",
+    "description": "环境嘈杂带情绪，丢件索赔",
+    "file_path": "dataset/asr/audio/noisy_06.wav"
+  },
+  {
+    "id": "ASR-027",
+    "group": "noisy",
+    "audio_file": "noisy_07.wav",
+    "ground_truth": "七天无理由退货发票找不到了还能不能退急死我了",
+    "intent": "return",
+    "speaker": "spk_17",
+    "description": "嘈杂语速快，缺失发票退货咨询",
+    "file_path": "dataset/asr/audio/noisy_07.wav"
+  },
+  {
+    "id": "ASR-028",
+    "group": "noisy",
+    "audio_file": "noisy_08.wav",
+    "ground_truth": "投影仪画面出现黑斑怎么处理刚买了一个月能免费换光机吗",
+    "intent": "repair",
+    "speaker": "spk_18",
+    "description": "混响回声环境，光机黑斑质保",
+    "file_path": "dataset/asr/audio/noisy_08.wav"
+  },
+  {
+    "id": "ASR-029",
+    "group": "noisy",
+    "audio_file": "noisy_09.wav",
+    "ground_truth": "包装箱被家里保洁阿姨扔掉了裸机能不能支持退货",
+    "intent": "return",
+    "speaker": "spk_19",
+    "description": "家庭背景杂音，原包装缺失退货",
+    "file_path": "dataset/asr/audio/noisy_09.wav"
+  },
+  {
+    "id": "ASR-030",
+    "group": "noisy",
+    "audio_file": "noisy_10.wav",
+    "ground_truth": "顺丰加急件为什么走陆运我付的是空运费必须退差价",
+    "intent": "logistics",
+    "speaker": "spk_20",
+    "description": "马路噪音，空运变陆运退费",
+    "file_path": "dataset/asr/audio/noisy_10.wav"
+  },
+  {
+    "id": "ASR-031",
+    "group": "noisy",
+    "audio_file": "noisy_11.wav",
+    "ground_truth": "平板电脑充电发烫自动关机买来才两周申请换新机",
+    "intent": "repair",
+    "speaker": "spk_11",
+    "description": "充电发烫故障换新",
+    "file_path": "dataset/asr/audio/noisy_11.wav"
+  },
+  {
+    "id": "ASR-032",
+    "group": "noisy",
+    "audio_file": "noisy_12.wav",
+    "ground_truth": "我人不在家能不能帮我把快递暂存网点三天后再派送",
+    "intent": "logistics",
+    "speaker": "spk_12",
+    "description": "延期派送预约",
+    "file_path": "dataset/asr/audio/noisy_12.wav"
+  },
+  {
+    "id": "ASR-033",
+    "group": "noisy",
+    "audio_file": "noisy_13.wav",
+    "ground_truth": "定制刻字的手表表壳有划痕这种情况你们给不给退货",
+    "intent": "return",
+    "speaker": "spk_13",
+    "description": "定制商品退换规则",
+    "file_path": "dataset/asr/audio/noisy_13.wav"
+  },
+  {
+    "id": "ASR-034",
+    "group": "noisy",
+    "audio_file": "noisy_14.wav",
+    "ground_truth": "路由器升级固件变砖亮红灯怎么售后恢复",
+    "intent": "repair",
+    "speaker": "spk_14",
+    "description": "固件变砖刷机维修",
+    "file_path": "dataset/asr/audio/noisy_14.wav"
+  },
+  {
+    "id": "ASR-035",
+    "group": "noisy",
+    "audio_file": "noisy_15.wav",
+    "ground_truth": "外包装箱破损物流司机不让验货直接跑了怎么投诉",
+    "intent": "logistics",
+    "speaker": "spk_15",
+    "description": "拒绝验货投诉",
+    "file_path": "dataset/asr/audio/noisy_15.wav"
+  },
+  {
+    "id": "ASR-036",
+    "group": "noisy",
+    "audio_file": "noisy_16.wav",
+    "ground_truth": "电竞椅气压杆升降失灵要求补发新的气压杆",
+    "intent": "repair",
+    "speaker": "spk_16",
+    "description": "配件补发维修",
+    "file_path": "dataset/asr/audio/noisy_16.wav"
+  },
+  {
+    "id": "ASR-037",
+    "group": "noisy",
+    "audio_file": "noisy_17.wav",
+    "ground_truth": "买了两件只寄到一件清单上写着两件物流少件怎么处理",
+    "intent": "logistics",
+    "speaker": "spk_17",
+    "description": "少件漏发物流核查",
+    "file_path": "dataset/asr/audio/noisy_17.wav"
+  },
+  {
+    "id": "ASR-038",
+    "group": "noisy",
+    "audio_file": "noisy_18.wav",
+    "ground_truth": "化妆品开封后皮肤过敏提供医院诊断证明申请退货退款",
+    "intent": "return",
+    "speaker": "spk_18",
+    "description": "过敏特殊退货通道",
+    "file_path": "dataset/asr/audio/noisy_18.wav"
+  },
+  {
+    "id": "ASR-039",
+    "group": "noisy",
+    "audio_file": "noisy_19.wav",
+    "ground_truth": "过了保修期三个月自费维修大概需要多少钱能先报价吗",
+    "intent": "repair",
+    "speaker": "spk_19",
+    "description": "过保自费维修报价",
+    "file_path": "dataset/asr/audio/noisy_19.wav"
+  },
+  {
+    "id": "ASR-040",
+    "group": "noisy",
+    "audio_file": "noisy_20.wav",
+    "ground_truth": "同城急送超时一小时冷冻食品化水损坏申请全额货损理赔",
+    "intent": "logistics",
+    "speaker": "spk_20",
+    "description": "生鲜冷链货损理赔",
+    "file_path": "dataset/asr/audio/noisy_20.wav"
+  }
+]

@@ -1,0 +1,96 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: voiceops-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: voiceops
+      POSTGRES_PASSWORD: voiceops_password
+      POSTGRES_DB: voiceops_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U voiceops -d voiceops_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: voiceops-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: voiceops-mailpit
+    restart: always
+    ports:
+      - "8025:8025"  # Web UI for mock emails
+      - "1025:1025"  # SMTP port
+
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: voiceops-n8n
+    restart: always
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_BASIC_AUTH_ACTIVE=false
+      - WEBHOOK_URL=http://localhost:5678/
+      - GENERIC_TIMEZONE=Asia/Shanghai
+    volumes:
+      - n8n_data:/home/node/.n8n
+    depends_on:
+      - postgres
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: voiceops-backend
+    restart: always
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://voiceops:voiceops_password@postgres:5432/voiceops_db
+      - REDIS_URL=redis://redis:6379/0
+      - N8N_WEBHOOK_URL=http://n8n:5678/webhook/voiceops-workorder
+      - MOCK_NOTIFICATION_WEBHOOK=true
+      - STORAGE_DIR=/app/storage
+    ports:
+      - "8000:8000"
+    volumes:
+      - backend_storage:/app/storage
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    container_name: voiceops-frontend
+    restart: always
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
+  redis_data:
+  n8n_data:
+  backend_storage:

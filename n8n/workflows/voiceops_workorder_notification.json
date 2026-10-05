@@ -1,0 +1,236 @@
+{
+  "name": "VoiceOps After-Sales WorkOrder Automation & Notification",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "voiceops-workorder",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "node-webhook-trigger",
+      "name": "Webhook: Receive WorkOrder",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [220, 300],
+      "webhookId": "voiceops-workorder"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "c-ticket-exists",
+              "leftValue": "={{ $json.body.ticket_number }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty"
+              }
+            }
+          ]
+        }
+      },
+      "id": "node-validate-payload",
+      "name": "Check Payload & Idempotency",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [440, 300]
+    },
+    {
+      "parameters": {
+        "dataType": "string",
+        "value1": "={{ $json.body.ticket_type }}",
+        "rules": {
+          "rules": [
+            {
+              "value2": "RETURN",
+              "output": 0
+            },
+            {
+              "value2": "REPAIR",
+              "output": 1
+            },
+            {
+              "value2": "LOGISTICS_EXPEDITE",
+              "output": 2
+            }
+          ]
+        }
+      },
+      "id": "node-switch-ticket-type",
+      "name": "Switch on Ticket Type",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3,
+      "position": [660, 300]
+    },
+    {
+      "parameters": {
+        "fromEmail": "voiceops-service@company.com",
+        "toEmail": "mock-customer@company.com",
+        "subject": "=[VoiceOps 退货办理通知] 工单号: {{ $('Webhook: Receive WorkOrder').item.json.body.ticket_number }}",
+        "text": "=尊敬的客户，您的退货工单 {{ $('Webhook: Receive WorkOrder').item.json.body.ticket_number }} 已由客服审核通过。\n建议方案: {{ $('Webhook: Receive WorkOrder').item.json.body.solution_proposal }}\n请通过顺丰寄回，我们将在验货后第一时间为您退款。",
+        "options": {}
+      },
+      "id": "node-mail-return",
+      "name": "Send Return Email (Mailpit)",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [900, 180]
+    },
+    {
+      "parameters": {
+        "fromEmail": "voiceops-repair@company.com",
+        "toEmail": "mock-customer@company.com",
+        "subject": "=[VoiceOps 维修换新派单] 工单号: {{ $('Webhook: Receive WorkOrder').item.json.body.ticket_number }}",
+        "text": "=尊敬的客户，您的设备保修工单 {{ $('Webhook: Receive WorkOrder').item.json.body.ticket_number }} 已确认下发。\n方案: {{ $('Webhook: Receive WorkOrder').item.json.body.solution_proposal }}\n官方售后网点已收到备件调拨请求，顺丰到付单号已生成。",
+        "options": {}
+      },
+      "id": "node-mail-repair",
+      "name": "Send Repair Email (Mailpit)",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "fromEmail": "voiceops-logistics@company.com",
+        "toEmail": "mock-customer@company.com",
+        "subject": "=[VoiceOps 物流催配专单] 工单号: {{ $('Webhook: Receive WorkOrder').item.json.body.ticket_number }}",
+        "text": "=尊敬的客户，针对物流延误/异常工单 {{ $('Webhook: Receive WorkOrder').item.json.body.ticket_number }} 已加急催配承运商。\n方案: {{ $('Webhook: Receive WorkOrder').item.json.body.solution_proposal }}\n已同步向您账户发放 50 元超时补偿优惠券。",
+        "options": {}
+      },
+      "id": "node-mail-logistics",
+      "name": "Send Logistics Email (Mailpit)",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [900, 420]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "http://backend:8000/api/v1/webhook/n8n/callback",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={\n  \"ticket_number\": \"{{ $('Webhook: Receive WorkOrder').item.json.body.ticket_number }}\",\n  \"status\": \"callback_succeeded\",\n  \"channel\": \"email\",\n  \"response_payload\": {\n    \"notified_at\": \"{{ $now.toISO() }}\",\n    \"smtp_delivery\": \"SUCCESS\"\n  }\n}"
+      },
+      "id": "node-http-callback",
+      "name": "Callback: Update VoiceOps Status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1160, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"success\": true,\n  \"ticket_number\": \"{{ $('Webhook: Receive WorkOrder').item.json.body.ticket_number }}\",\n  \"message\": \"VoiceOps work order dispatched and notified successfully\"\n}"
+      },
+      "id": "node-respond-webhook",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1380, 300]
+    }
+  ],
+  "connections": {
+    "Webhook: Receive WorkOrder": {
+      "main": [
+        [
+          {
+            "node": "Check Payload & Idempotency",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Payload & Idempotency": {
+      "main": [
+        [
+          {
+            "node": "Switch on Ticket Type",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch on Ticket Type": {
+      "main": [
+        [
+          {
+            "node": "Send Return Email (Mailpit)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Repair Email (Mailpit)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Logistics Email (Mailpit)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Return Email (Mailpit)": {
+      "main": [
+        [
+          {
+            "node": "Callback: Update VoiceOps Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Repair Email (Mailpit)": {
+      "main": [
+        [
+          {
+            "node": "Callback: Update VoiceOps Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Logistics Email (Mailpit)": {
+      "main": [
+        [
+          {
+            "node": "Callback: Update VoiceOps Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Callback: Update VoiceOps Status": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

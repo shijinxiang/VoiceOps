@@ -26,6 +26,8 @@ htmlcov/
 
 # Local database & storage
 *.db
+*.db-shm
+*.db-wal
 voiceops.db
 storage/
 test_ci.db

@@ -56,8 +56,9 @@ class ASRService:
             # Default demo sample
             transcribed_text = "您好，我上周五买的降噪耳机，订单号是ORD-20261001-8848，右耳没有声音充不进电，申请换货。"
 
-        # Simulate GPU / ASR model latency (approx 200-400ms)
-        time.sleep(0.15)
+        # Non-blocking async simulation of ASR model latency
+        import asyncio
+        await asyncio.sleep(0.02)
         latency_ms = int((time.perf_counter() - start_time) * 1000)
 
         # Apply sensitive data masking

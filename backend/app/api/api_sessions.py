@@ -9,13 +9,16 @@ from backend.app.models import SessionModel, AudioFileModel, TranscriptionModel,
 from backend.app.schemas import SessionCreate, SessionResponse
 from backend.app.services.masking_service import masking_service
 
+import uuid
+
 router = APIRouter()
 
 @router.post("", response_model=SessionResponse)
 async def create_session(req: SessionCreate, db: AsyncSession = Depends(get_db)):
     code_suffix = datetime.utcnow().strftime("%Y%m%d%H%M%S")
+    rand_suffix = uuid.uuid4().hex[:6].upper()
     session = SessionModel(
-        session_code=f"SESS-{code_suffix}",
+        session_code=f"SESS-{code_suffix}-{rand_suffix}",
         customer_name_masked=masking_service.mask_name(req.customer_name or ""),
         customer_phone_masked=masking_service.mask_phone(req.customer_phone or ""),
         channel=req.channel,

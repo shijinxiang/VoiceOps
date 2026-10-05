@@ -59,10 +59,9 @@ class WorkOrderService:
             confirmed_at=datetime.utcnow()
         )
         db.add(work_order)
-        await db.flush()
-
-        # Update Session status
         session.status = "completed"
+        await db.commit()
+        await db.refresh(work_order)
 
         # 4. Trigger n8n Automation Webhook
         notify_payload = {
@@ -85,7 +84,6 @@ class WorkOrderService:
         )
         db.add(task)
         await db.commit()
-        await db.refresh(work_order)
 
         return work_order
 

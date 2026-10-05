@@ -29,7 +29,7 @@ class Settings(BaseSettings):
     MOCK_NOTIFICATION_WEBHOOK: bool = True
     
     # RAG parameters
-    RAG_SIMILARITY_THRESHOLD: float = 0.55
+    RAG_SIMILARITY_THRESHOLD: float = 0.35
     RAG_TOP_K: int = 3
     
     # Hardware & Latency Budgets

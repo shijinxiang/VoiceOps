@@ -24,19 +24,41 @@ class RAGService:
             with open(kb_path, "r", encoding="utf-8") as f:
                 self.chunks = json.load(f)
 
+    CONCEPT_MAP = {
+        "__CONCEPT_EXCHANGE__": ["换新", "换一台", "更换新机", "换货", "换新机", "更换同型号全新机器"],
+        "__CONCEPT_FAULT__": ["坏了", "故障", "性能故障", "毛病", "失灵", "不加热", "充不进电", "开不了机"],
+        "__CONCEPT_WARRANTY__": ["保修", "质保", "联保", "免费修", "保修期", "全国联保", "整机保修"],
+        "__CONCEPT_SHIPPING_FEE__": ["运费", "邮费", "运费险", "寄回运费", "到付", "谁出"],
+        "__CONCEPT_PACKAGING__": ["包装", "原包装", "包装盒", "吊牌", "折损"],
+        "__CONCEPT_INVOICE__": ["发票", "红字发票", "开票", "增值税"],
+        "__CONCEPT_ALLERGY__": ["过敏", "红肿", "门诊", "诊断证明", "二级及以上"],
+        "__CONCEPT_ACCIDENTAL_DAMAGE__": ["摔碎", "进水", "私自拆机", "非原装", "人为损坏", "物理撞击", "固件变砖"],
+        "__CONCEPT_REDIRECT__": ["改地址", "修改地址", "转寄", "修改收货地址", "在途改配"],
+        "__CONCEPT_DELAY__": ["超时", "延误", "晚到", "没动静", "停滞", "几天没到"],
+        "__CONCEPT_REJECT_DAMAGED__": ["拒收", "破损", "压烂", "漏水", "开箱验货", "变形"],
+        "__CONCEPT_LOST_PACKAGE__": ["丢件", "未收到", "冒领", "虚假签收", "代签收", "丢失"],
+        "__CONCEPT_OUT_OF_WARRANTY__": ["过保", "过保修期", "自费维修", "有偿检测", "报价"],
+        "__CONCEPT_RETURN_7D__": ["七天无理由", "7天", "退掉", "退货", "不喜欢", "买错"]
+    }
+
     def _tokenize(self, text: str) -> List[str]:
-        # Character bigram + keyword extraction
-        text = text.lower().strip()
+        text_lower = text.lower().strip()
         tokens = []
-        # Add single significant characters
-        for ch in text:
+        # Add characters and bigrams
+        for ch in text_lower:
             if '\u4e00' <= ch <= '\u9fa5' or ch.isalnum():
                 tokens.append(ch)
-        # Add bigrams
-        for i in range(len(text) - 1):
-            pair = text[i:i+2]
+        for i in range(len(text_lower) - 1):
+            pair = text_lower[i:i+2]
             if all('\u4e00' <= c <= '\u9fa5' or c.isalnum() for c in pair):
                 tokens.append(pair)
+
+        # Inject matching canonical concepts
+        for concept, kw_list in self.CONCEPT_MAP.items():
+            for kw in kw_list:
+                if kw in text_lower:
+                    tokens.append(concept)
+                    break
         return tokens
 
     def _compute_similarity(self, query: str, chunk_text: str) -> float:
@@ -46,20 +68,13 @@ class RAGService:
             return 0.0
 
         intersection = q_tokens.intersection(c_tokens)
-        # Jaccard / Dice overlap combined with length norm
-        dice = (2.0 * len(intersection)) / (len(q_tokens) + len(c_tokens))
-        
-        # Keyword weighting boost for high-salience terms
-        important_keywords = [
-            "退货", "换货", "保修", "维修", "顺丰", "运费", "发票", "包装", "过敏", 
-            "进水", "摔碎", "屏幕", "电机", "延误", "改地址", "拒收", "签收", "丢失", "超时", "赠品"
-        ]
-        boost = 0.0
-        for kw in important_keywords:
-            if kw in query and kw in chunk_text:
-                boost += 0.08
+        query_coverage = len(intersection) / len(q_tokens)
 
-        score = min(dice * 0.7 + boost, 1.0)
+        # Bonus for shared canonical domain concepts
+        concept_overlap = sum(1 for t in intersection if t.startswith("__CONCEPT_"))
+        concept_bonus = min(concept_overlap * 0.18, 0.36)
+
+        score = min(query_coverage * 0.70 + concept_bonus, 1.0)
         return round(score, 4)
 
     def search(self, query: str, top_k: int = 3) -> Dict[str, Any]:

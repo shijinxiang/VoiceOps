@@ -22,6 +22,8 @@ class OrderService:
                     self.orders[order["order_id"]] = order
 
     def get_order(self, order_id: str) -> Optional[Dict[str, Any]]:
+        if order_id not in self.orders:
+            self._load_mock_orders()
         return self.orders.get(order_id)
 
     def search_by_phone(self, phone: str) -> List[Dict[str, Any]]:

@@ -8,6 +8,8 @@ from backend.app.schemas import WorkOrderConfirmRequest
 from backend.app.services.n8n_service import n8n_service
 from backend.app.config import settings
 
+import uuid
+
 class WorkOrderService:
     """
     Work Order Lifecycle & Human-in-the-loop (HITL) Service.
@@ -17,7 +19,8 @@ class WorkOrderService:
     @staticmethod
     def generate_ticket_number() -> str:
         timestamp_str = datetime.utcnow().strftime("%Y%m%d%H%M%S")
-        return f"WO-{timestamp_str}"
+        suffix = uuid.uuid4().hex[:6].upper()
+        return f"WO-{timestamp_str}-{suffix}"
 
     async def confirm_and_create(
         self, 

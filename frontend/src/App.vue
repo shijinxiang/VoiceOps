@@ -5,9 +5,7 @@
       <div class="max-w-7xl mx-auto flex items-center justify-between">
         <!-- Brand & Platform Info -->
         <div class="flex items-center space-x-3">
-          <div class="w-8 h-8 rounded-lg bg-slate-900 text-white flex items-center justify-center shadow-xs font-semibold text-sm tracking-wider">
-            VO
-          </div>
+          <img src="/logo.png" alt="VoiceOps" class="w-8 h-8 rounded-lg shadow-xs object-cover" />
           <div class="flex items-center space-x-2">
             <h1 class="font-bold text-base text-slate-900 tracking-tight">VoiceOps</h1>
             <span class="px-2 py-0.5 text-[11px] font-medium rounded-full bg-slate-100 text-slate-600 border border-slate-200/80">

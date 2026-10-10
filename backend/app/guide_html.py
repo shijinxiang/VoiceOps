@@ -12,6 +12,7 @@ def generate_guide_html() -> str:
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title id="doc-title">VoiceOps - 业务使用指南与操作手册</title>
+  <link rel="icon" type="image/png" href="/static/logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -27,9 +28,7 @@ def generate_guide_html() -> str:
     <div class="max-w-7xl mx-auto flex items-center justify-between">
       <!-- Brand & Title -->
       <div class="flex items-center space-x-3">
-        <div class="w-8 h-8 rounded-lg bg-slate-900 text-white flex items-center justify-center font-bold text-sm tracking-wide shadow-xs">
-          VO
-        </div>
+        <img src="/static/logo.png" alt="VoiceOps Logo" class="w-8 h-8 rounded-lg shadow-xs object-cover" />
         <div>
           <div class="flex items-center space-x-2">
             <h1 class="font-bold text-base text-slate-900 tracking-tight" id="nav-brand-title">VoiceOps 操作手册</h1>

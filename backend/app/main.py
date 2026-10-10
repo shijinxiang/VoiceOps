@@ -1,6 +1,8 @@
+import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, FileResponse
+from fastapi.staticfiles import StaticFiles
 from contextlib import asynccontextmanager
 
 from backend.app.config import settings
@@ -50,6 +52,17 @@ app.include_router(orders_router, prefix=f"{prefix}/orders", tags=["业务订单
 app.include_router(work_orders_router, prefix=f"{prefix}/work-orders", tags=["工单审批与流转"])
 app.include_router(webhook_router, prefix=f"{prefix}/webhook/n8n", tags=["通知与自动化"])
 
+# 挂载静态资源与图标
+static_dir = os.path.join(os.path.dirname(__file__), "static")
+if os.path.exists(static_dir):
+    app.mount("/static", StaticFiles(directory=static_dir), name="static")
+
+@app.get("/favicon.ico", include_in_schema=False)
+def favicon():
+    fav_path = os.path.join(static_dir, "favicon.ico")
+    if os.path.exists(fav_path):
+        return FileResponse(fav_path)
+    return HTMLResponse(status_code=404)
 
 @app.get("/", response_class=HTMLResponse, include_in_schema=False)
 def backend_gateway_dashboard():
@@ -61,6 +74,7 @@ def backend_gateway_dashboard():
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title id="page-title">VoiceOps - 后端服务与开发网关</title>
+      <link rel="icon" type="image/png" href="/static/logo.png">
       <link rel="preconnect" href="https://fonts.googleapis.com">
       <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
       <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -74,9 +88,7 @@ def backend_gateway_dashboard():
       <header class="border-b border-slate-200/80 bg-white sticky top-0 z-20 px-6 py-4 shadow-xs">
         <div class="max-w-6xl mx-auto flex items-center justify-between">
           <div class="flex items-center space-x-3">
-            <div class="w-9 h-9 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold text-sm tracking-wide">
-              VO
-            </div>
+            <img src="/static/logo.png" alt="VoiceOps Logo" class="w-9 h-9 rounded-xl shadow-xs object-cover" />
             <div>
               <div class="flex items-center space-x-2">
                 <h1 id="nav-title" class="font-bold text-base text-slate-900">VoiceOps 后端服务网关</h1>

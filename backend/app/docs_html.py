@@ -14,6 +14,7 @@ def generate_docs_html() -> str:
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title id="page-title">VoiceOps - API 接口规范与调试控制台</title>
+  <link rel="icon" type="image/png" href="/static/logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -465,9 +466,7 @@ def generate_docs_html() -> str:
       
       <!-- Left Brand & Title -->
       <div class="flex items-center space-x-3">
-        <div class="w-8 h-8 rounded-lg bg-slate-900 text-white flex items-center justify-center font-bold text-sm tracking-wide shadow-xs">
-          VO
-        </div>
+        <img src="/static/logo.png" alt="VoiceOps Logo" class="w-8 h-8 rounded-lg shadow-xs object-cover" />
         <div class="flex items-center space-x-2.5">
           <h1 class="font-bold text-base text-slate-900 tracking-tight" id="nav-brand-title">VoiceOps API 规范文档</h1>
           <span class="px-2 py-0.5 text-[11px] font-semibold rounded-full bg-slate-100 text-slate-600 border border-slate-200">

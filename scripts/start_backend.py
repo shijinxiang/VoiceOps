@@ -4,6 +4,17 @@ import sys
 import subprocess
 import time
 
+# 兼容 Windows 控制台 UTF-8 编码
+if sys.platform == "win32":
+    import io
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
+
+# 确保项目根目录在 python path 中
+ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+if ROOT_DIR not in sys.path:
+    sys.path.insert(0, ROOT_DIR)
+
 def find_available_port(start_port: int, max_attempts: int = 50, host: str = "127.0.0.1") -> int:
     """从 start_port 开始探测可用端口，若被占用或受限则自动递增"""
     for port in range(start_port, start_port + max_attempts):
@@ -60,7 +71,7 @@ def main():
     
     # 运行 uvicorn
     import uvicorn
-    uvicorn.run("backend.app.main:app", host=host, port=target_port, reload=True)
+    uvicorn.run("backend.app.main:app", host=host, port=target_port, reload=True, app_dir=ROOT_DIR)
 
 if __name__ == "__main__":
     main()

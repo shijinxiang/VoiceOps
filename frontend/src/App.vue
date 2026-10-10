@@ -4,23 +4,32 @@
     <header class="border-b border-slate-200/80 bg-white/95 backdrop-blur sticky top-0 z-40 px-6 py-3.5 shadow-xs">
       <div class="max-w-7xl mx-auto flex items-center justify-between">
         <!-- Brand & Platform Info -->
-        <div class="flex items-center space-x-3.5">
-          <div class="w-9 h-9 rounded-xl bg-slate-900 text-white flex items-center justify-center shadow-xs font-semibold text-base tracking-wider">
+        <div class="flex items-center space-x-3">
+          <div class="w-8 h-8 rounded-lg bg-slate-900 text-white flex items-center justify-center shadow-xs font-semibold text-sm tracking-wider">
             VO
           </div>
-          <div>
-            <div class="flex items-center space-x-2">
-              <h1 class="font-bold text-base text-slate-900 tracking-tight">VoiceOps</h1>
-              <span class="px-2 py-0.5 text-[11px] font-medium rounded-full bg-slate-100 text-slate-600 border border-slate-200/80">
-                {{ t('badge_workbench') }}
-              </span>
-            </div>
-            <p class="text-xs text-slate-500 mt-0.5">{{ t('subtitle') }}</p>
+          <div class="flex items-center space-x-2">
+            <h1 class="font-bold text-base text-slate-900 tracking-tight">VoiceOps</h1>
+            <span class="px-2 py-0.5 text-[11px] font-medium rounded-full bg-slate-100 text-slate-600 border border-slate-200/80">
+              {{ t('badge_workbench') }}
+            </span>
           </div>
         </div>
 
         <!-- Top Right Actions -->
         <div class="flex items-center space-x-3">
+          <!-- Documentation Link -->
+          <a 
+            href="/guide" 
+            target="_blank"
+            class="flex items-center space-x-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium rounded-lg transition border border-slate-200/80"
+          >
+            <svg class="w-3.5 h-3.5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+            </svg>
+            <span>{{ t('btn_docs') }}</span>
+          </a>
+
           <!-- Language Toggle Button -->
           <button 
             @click="toggleLang"
@@ -151,7 +160,6 @@
             </svg>
           </div>
           <p class="text-sm font-medium text-slate-600">{{ t('empty_select_prompt') }}</p>
-          <p class="text-xs text-slate-400 mt-1">{{ t('empty_select_sub') }}</p>
         </div>
 
         <template v-else>
@@ -211,30 +219,10 @@
             </div>
           </div>
 
-          <!-- Stepper Navigation -->
-          <div class="grid grid-cols-4 gap-2 text-xs font-medium text-slate-500">
-            <div :class="['p-2 rounded-lg border text-center transition', audioFiles.length > 0 ? 'bg-white border-slate-300 text-slate-800 shadow-xs' : 'bg-slate-50/70 border-slate-200/80']">
-              {{ t('step_1') }}
-            </div>
-            <div :class="['p-2 rounded-lg border text-center transition', transcriptions.length > 0 ? 'bg-white border-slate-300 text-slate-800 shadow-xs' : 'bg-slate-50/70 border-slate-200/80']">
-              {{ t('step_2') }}
-            </div>
-            <div :class="['p-2 rounded-lg border text-center transition', agentResult ? 'bg-white border-slate-300 text-slate-800 shadow-xs' : 'bg-slate-50/70 border-slate-200/80']">
-              {{ t('step_3') }}
-            </div>
-            <div :class="['p-2 rounded-lg border text-center transition', currentWorkOrder ? 'bg-emerald-50 border-emerald-300 text-emerald-800 shadow-xs' : 'bg-slate-50/70 border-slate-200/80']">
-              {{ t('step_4') }}
-            </div>
-          </div>
-
-          <!-- Step 1: Audio Upload Card -->
+          <!-- Audio Record Card -->
           <div class="bg-white border border-slate-200/90 rounded-xl p-5 shadow-xs space-y-4">
             <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-              <div class="flex items-center space-x-2">
-                <span class="w-5 h-5 rounded-md bg-slate-900 text-white text-[11px] font-semibold flex items-center justify-center">1</span>
-                <h3 class="font-semibold text-slate-800 text-sm">{{ t('card1_title') }}</h3>
-              </div>
-              <span class="text-xs text-slate-400">{{ t('card1_format_tip') }}</span>
+              <h3 class="font-semibold text-slate-800 text-sm">{{ t('card1_title') }}</h3>
             </div>
 
             <!-- Upload Area -->
@@ -255,7 +243,6 @@
                 </svg>
               </div>
               <p class="text-xs font-semibold text-slate-700">{{ t('card1_upload_prompt') }}</p>
-              <p class="text-[11px] text-slate-400 mt-1">{{ t('card1_upload_desc') }}</p>
             </div>
 
             <!-- Uploaded Audio List -->
@@ -292,13 +279,10 @@
             </div>
           </div>
 
-          <!-- Step 2: Transcript & Privacy Masking Card -->
+          <!-- Transcript Card -->
           <div v-if="transcriptions.length > 0" class="bg-white border border-slate-200/90 rounded-xl p-5 shadow-xs space-y-4">
             <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-              <div class="flex items-center space-x-2">
-                <span class="w-5 h-5 rounded-md bg-slate-900 text-white text-[11px] font-semibold flex items-center justify-center">2</span>
-                <h3 class="font-semibold text-slate-800 text-sm">{{ t('card2_title') }}</h3>
-              </div>
+              <h3 class="font-semibold text-slate-800 text-sm">{{ t('card2_title') }}</h3>
               <div class="flex items-center space-x-2 text-xs">
                 <span class="px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 text-[11px] font-medium">
                   {{ t('card2_privacy_tag') }}
@@ -364,16 +348,12 @@
             </div>
           </div>
 
-          <!-- Step 3: Policy Citations & Order Details Cards -->
+          <!-- Policy & Order Details Cards -->
           <div v-if="agentResult" class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <!-- Left: Applicable Policy Guidelines -->
             <div class="bg-white border border-slate-200/90 rounded-xl p-5 shadow-xs space-y-3">
               <div class="flex items-center justify-between pb-2 border-b border-slate-100">
-                <div class="flex items-center space-x-2">
-                  <span class="w-5 h-5 rounded-md bg-slate-900 text-white text-[11px] font-semibold flex items-center justify-center">3A</span>
-                  <h4 class="font-semibold text-slate-800 text-xs">{{ t('card3a_title') }}</h4>
-                </div>
-                <span class="text-[11px] text-slate-400">{{ t('card3a_sub') }}</span>
+                <h4 class="font-semibold text-slate-800 text-xs">{{ t('card3a_title') }}</h4>
               </div>
 
               <div v-if="agentResult.citations && agentResult.citations.length > 0" class="space-y-2">
@@ -397,10 +377,7 @@
             <!-- Right: Order Lookup Details -->
             <div class="bg-white border border-slate-200/90 rounded-xl p-5 shadow-xs space-y-3">
               <div class="flex items-center justify-between pb-2 border-b border-slate-100">
-                <div class="flex items-center space-x-2">
-                  <span class="w-5 h-5 rounded-md bg-slate-900 text-white text-[11px] font-semibold flex items-center justify-center">3B</span>
-                  <h4 class="font-semibold text-slate-800 text-xs">{{ t('card3b_title') }}</h4>
-                </div>
+                <h4 class="font-semibold text-slate-800 text-xs">{{ t('card3b_title') }}</h4>
                 <span class="px-2 py-0.5 rounded bg-slate-100 text-slate-700 text-[11px] font-medium border border-slate-200">
                   {{ t('intent_prefix') }} {{ intentText(agentResult.intent) }}
                 </span>
@@ -430,14 +407,10 @@
             </div>
           </div>
 
-          <!-- Step 4: Staff Review & Work Order Approval -->
+          <!-- Staff Review & Work Order Approval -->
           <div v-if="agentResult" class="bg-white border-2 border-slate-900 rounded-xl p-5 shadow-sm space-y-4">
             <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-              <div class="flex items-center space-x-2">
-                <span class="w-5 h-5 rounded-md bg-slate-900 text-white text-[11px] font-semibold flex items-center justify-center">4</span>
-                <h3 class="font-bold text-slate-900 text-sm">{{ t('card4_title') }}</h3>
-              </div>
-              <span class="text-xs text-slate-500">{{ t('card4_sub') }}</span>
+              <h3 class="font-bold text-slate-900 text-sm">{{ t('card4_title') }}</h3>
             </div>
 
             <div class="space-y-3">
@@ -471,13 +444,10 @@
             </div>
           </div>
 
-          <!-- Step 5: Confirmed Work Order Details (Always visible if work order exists) -->
+          <!-- Confirmed Work Order Voucher Card -->
           <div v-if="currentWorkOrder" class="bg-white border border-slate-200/90 rounded-xl p-5 shadow-xs space-y-4">
             <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-              <div class="flex items-center space-x-2">
-                <span class="w-5 h-5 rounded-md bg-emerald-600 text-white text-[11px] font-semibold flex items-center justify-center">✓</span>
-                <h3 class="font-semibold text-slate-800 text-sm">{{ t('card5_title') }}</h3>
-              </div>
+              <h3 class="font-semibold text-slate-800 text-sm">{{ t('card5_title') }}</h3>
               <span class="text-xs px-2.5 py-0.5 rounded font-mono font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
                 {{ t('ticket_number_prefix') }} {{ currentWorkOrder.ticket_number }}
               </span>
@@ -514,7 +484,7 @@
             </div>
           </div>
 
-          <!-- Step 6: Operation Audit Trail Log -->
+          <!-- Operation Audit Trail Log -->
           <div v-if="traces.length > 0" class="bg-white border border-slate-200/90 rounded-xl p-5 shadow-xs space-y-3">
             <div class="flex items-center justify-between pb-2 border-b border-slate-100">
               <h3 class="font-semibold text-slate-800 text-xs">{{ t('card6_title') }}</h3>
@@ -565,9 +535,9 @@ const currentLang = ref<Locale>((localStorage.getItem('voiceops_lang') as Locale
 
 const messages = {
   zh: {
-    badge_workbench: '企业售后工作台',
-    subtitle: '客户语音速记 · 售后政策核对 · 订单关联 · 坐席工单流转系统',
-    service_ready: '服务运行就绪',
+    badge_workbench: '售后工作台',
+    btn_docs: '使用手册',
+    service_ready: '服务就绪',
     btn_new_session: '录入新会话',
     session_list_title: '售后会话列表',
     items_unit: '项',
@@ -577,7 +547,7 @@ const messages = {
     search_placeholder: '搜索编号、客户姓名或手机号...',
     no_sessions_found: '暂无匹配的会话记录',
     status_completed: '已结单',
-    status_pending_confirmation: '待审核建单',
+    status_pending_confirmation: '待审核',
     status_processing: '流转中',
     customer_prefix: '客户: ',
     anonymous_customer: '匿名客户',
@@ -585,78 +555,69 @@ const messages = {
     channel_prefix: '渠道: ',
     channel_voice: '电话热线',
     empty_select_prompt: '请选择左侧会话或点击上方录入新会话',
-    empty_select_sub: '支持录音速记、政策合规核对、订单查询与工单审批全流程',
-    session_completed_banner_prefix: '该售后会话已完成坐席审核建单，流转凭证号为：',
-    session_completed_banner_suffix: '，已触发流转调度通知。',
-    customer_profile: '客户档案: ',
-    contact_phone: '联系电话: ',
-    created_time: '录入时间: ',
+    session_completed_banner_prefix: '该会话已完成审核建单，凭证号：',
+    session_completed_banner_suffix: '，已触发流转通知。',
+    customer_profile: '客户: ',
+    contact_phone: '电话: ',
+    created_time: '时间: ',
     btn_refresh: '刷新状态',
-    step_1: '1. 录音导入',
-    step_2: '2. 隐私脱敏速记',
-    step_3: '3. 政策与单据核验',
-    step_4: '4. 坐席审核建单',
-    card1_title: '售后录音导入',
-    card1_format_tip: '支持标准音频格式',
-    card1_upload_prompt: '点击上传或将售后录音拖曳至此',
-    card1_upload_desc: '系统将自动执行语音文件完整性检验与降噪处理',
+    card1_title: '录音文件',
+    card1_upload_prompt: '点击上传或将录音文件拖拽至此',
     audio_duration: '时长: ',
-    audio_size: '文件大小: ',
-    btn_transcribe: '生成文字速记',
+    audio_size: '大小: ',
+    btn_transcribe: '生成速记',
     btn_transcribing: '速记解析中...',
-    card2_title: '录音速记与合规脱敏',
-    card2_privacy_tag: '客户隐私已脱敏保护',
-    process_duration: '处理耗时: ',
-    card2_content_label: '录音文字记录（手机号、姓名等隐私敏感信息已掩码脱敏）:',
-    card2_edited_tag: '✓ 坐席已人工校对',
-    btn_manual_edit: '坐席手工校对',
-    btn_collapse_edit: '收起校对',
+    card2_title: '速记文本',
+    card2_privacy_tag: '隐私已脱敏',
+    process_duration: '耗时: ',
+    card2_content_label: '速记内容:',
+    card2_edited_tag: '✓ 坐席已校对',
+    btn_manual_edit: '坐席校对',
+    btn_collapse_edit: '收起',
     edit_placeholder: '修正文字速记中的错漏字词...',
-    btn_save_revision: '保存修订',
-    btn_verify_policy: '核验售后政策与关联单据',
-    btn_verifying: '核验政策与关联单据中...',
-    card3a_title: '适用售后规章依据',
-    card3a_sub: '规章库核验',
+    btn_save_revision: '保存',
+    btn_verify_policy: '核验政策与关联单据',
+    btn_verifying: '核验中...',
+    card3a_title: '适用规章',
     match_score: '匹配度',
     no_policy_matched: '未检索到完全匹配的售后规章条款，请依据特殊政策人工判定。',
-    card3b_title: '关联系统订单详情',
-    intent_prefix: '诉求分类: ',
+    card3b_title: '关联订单',
+    intent_prefix: '诉求: ',
     intent_return: '七天无理由退货',
     intent_repair: '保修与维修申请',
     intent_logistics: '物流催查件',
     intent_other: '常规售后',
     order_id_label: '订单编号:',
-    order_product_label: '购买商品:',
-    order_amount_status_label: '订单金额与状态:',
+    order_product_label: '商品名称:',
+    order_amount_status_label: '金额与状态:',
     order_shipping_label: '承运物流:',
     order_not_found: '系统未查到单号记录',
     order_not_extracted: '录音中未提取到有效单号',
-    card4_title: '坐席人工审核建单',
-    card4_sub: '必须经客服终审确认 · 防误操作门禁',
-    card4_proposal_label: '拟定处置方案与审批结论（可直接调整）:',
+    card4_title: '工单审核',
+    card4_proposal_label: '处置结论:',
     card4_operator: '审核坐席',
-    btn_confirm_ticket: '审核通过，正式建单并触发流转通知',
+    btn_confirm_ticket: '审核通过，正式建单',
     btn_confirmed_state: '✓ 工单已审批建单并派发通知',
-    card5_title: '工单流转凭证',
+    card5_title: '工单凭证',
     ticket_number_prefix: '工单号: ',
-    ticket_status_label: '工单当前状态:',
-    ticket_status_created: '已派发已建单',
-    ticket_type_label: '工单业务类型:',
-    ticket_linked_order: '关联业务订单:',
-    ticket_confirmed_by: '审核坐席工号:',
-    ticket_confirmed_at: '审批完成时间:',
+    ticket_status_label: '工单状态:',
+    ticket_status_created: '已建单派发',
+    ticket_type_label: '业务类型:',
+    ticket_linked_order: '关联订单:',
+    ticket_confirmed_by: '审核坐席:',
+    ticket_confirmed_at: '审批时间:',
     ticket_resolution_label: '已确认处置方案结论:',
-    ticket_idempotency_key: '防重事务标识:',
+    ticket_idempotency_key: '防重标识:',
     none_value: '无',
-    card6_title: '系统操作流水与流转轨迹',
+    card6_title: '流转流水',
     trace_nodes_count: '共计 {count} 节点',
     trace_in: '入参:',
     trace_out: '回执:',
-    action_stt: '录音转写速记',
-    action_mask: '隐私脱敏校验',
-    action_policy: '适用规章检索',
-    action_order: '系统订单比对',
-    action_ticket: '工单生成与派发',
+    action_stt: '语音转写',
+    action_mask: '隐私脱敏',
+    action_policy: '规章检索',
+    action_order: '订单比对',
+    action_ticket: '工单派发',
     alert_create_failed: '创建会话失败',
     alert_upload_failed: '上传失败',
     alert_transcribe_failed: '生成速记失败',
@@ -665,9 +626,9 @@ const messages = {
     alert_confirm_failed: '确认建单失败'
   },
   en: {
-    badge_workbench: 'Operations Console',
-    subtitle: 'Audio Memo · Policy Verification · Order Matching · Ticket Dispatch System',
-    service_ready: 'Service Ready',
+    badge_workbench: 'Console',
+    btn_docs: 'Manual',
+    service_ready: 'Ready',
     btn_new_session: 'New Session',
     session_list_title: 'Customer Sessions',
     items_unit: 'items',
@@ -677,7 +638,7 @@ const messages = {
     search_placeholder: 'Search code, customer name or phone...',
     no_sessions_found: 'No matching sessions found',
     status_completed: 'Completed',
-    status_pending_confirmation: 'Pending Approval',
+    status_pending_confirmation: 'Pending',
     status_processing: 'In Progress',
     customer_prefix: 'Customer: ',
     anonymous_customer: 'Anonymous',
@@ -685,41 +646,33 @@ const messages = {
     channel_prefix: 'Channel: ',
     channel_voice: 'Voice Hotline',
     empty_select_prompt: 'Select a session or create a new one to begin',
-    empty_select_sub: 'Complete workflow for audio memo, policy check, order query, and ticket approval',
-    session_completed_banner_prefix: 'This session has been approved and dispatched, ticket voucher: ',
+    session_completed_banner_prefix: 'Session approved and dispatched, ticket voucher: ',
     session_completed_banner_suffix: ', notification triggered.',
     customer_profile: 'Customer: ',
     contact_phone: 'Phone: ',
-    created_time: 'Created: ',
-    btn_refresh: 'Refresh Status',
-    step_1: '1. Audio Import',
-    step_2: '2. Masked Memo',
-    step_3: '3. Policy & Order',
-    step_4: '4. Ticket Review',
-    card1_title: 'Audio Recording Import',
-    card1_format_tip: 'Standard Audio Formats Supported',
-    card1_upload_prompt: 'Click or drag customer audio here to upload',
-    card1_upload_desc: 'Automatic file integrity validation and noise reduction',
+    created_time: 'Time: ',
+    btn_refresh: 'Refresh',
+    card1_title: 'Audio Record',
+    card1_upload_prompt: 'Click or drag audio file to upload',
     audio_duration: 'Duration: ',
-    audio_size: 'File Size: ',
-    btn_transcribe: 'Generate Transcript',
-    btn_transcribing: 'Transcribing...',
-    card2_title: 'Transcript & Privacy Masking',
-    card2_privacy_tag: 'Customer Privacy Protected',
+    audio_size: 'Size: ',
+    btn_transcribe: 'Transcribe',
+    btn_transcribing: 'Processing...',
+    card2_title: 'Transcript',
+    card2_privacy_tag: 'Masked',
     process_duration: 'Latency: ',
-    card2_content_label: 'Audio Record (Customer phone and personal data masked for compliance):',
-    card2_edited_tag: '✓ Manually Revised',
-    btn_manual_edit: 'Manual Revision',
-    btn_collapse_edit: 'Collapse Editor',
-    edit_placeholder: 'Correct text and phrasing in transcript...',
-    btn_save_revision: 'Save Revision',
-    btn_verify_policy: 'Verify Policy & Match Order',
-    btn_verifying: 'Verifying Policy & Orders...',
-    card3a_title: 'Applicable Policy Guidelines',
-    card3a_sub: 'Policy Verification',
-    match_score: 'Match Score',
+    card2_content_label: 'Transcript Content:',
+    card2_edited_tag: '✓ Revised',
+    btn_manual_edit: 'Manual Edit',
+    btn_collapse_edit: 'Collapse',
+    edit_placeholder: 'Correct text and phrasing...',
+    btn_save_revision: 'Save',
+    btn_verify_policy: 'Verify Policy & Order',
+    btn_verifying: 'Verifying...',
+    card3a_title: 'Policy Guidelines',
+    match_score: 'Score',
     no_policy_matched: 'No exact policy terms matched. Manual review required.',
-    card3b_title: 'Linked Order Details',
+    card3b_title: 'Linked Order',
     intent_prefix: 'Category: ',
     intent_return: '7-Day Return',
     intent_repair: 'Repair & Warranty',
@@ -728,32 +681,31 @@ const messages = {
     order_id_label: 'Order ID:',
     order_product_label: 'Product:',
     order_amount_status_label: 'Amount & Status:',
-    order_shipping_label: 'Logistics Carrier:',
+    order_shipping_label: 'Logistics:',
     order_not_found: 'Order not found for',
-    order_not_extracted: 'No order ID extracted from audio',
-    card4_title: 'Staff Review & Approval',
-    card4_sub: 'Mandatory Human Approval Gate · Error Prevention',
-    card4_proposal_label: 'Proposed Resolution & Approval Note (Editable):',
+    order_not_extracted: 'No order ID in audio',
+    card4_title: 'Work Order Review',
+    card4_proposal_label: 'Resolution:',
     card4_operator: 'Reviewer',
-    btn_confirm_ticket: 'Approve & Dispatch Work Order',
-    btn_confirmed_state: '✓ Work Order Approved & Dispatched',
-    card5_title: 'Work Order Voucher',
+    btn_confirm_ticket: 'Approve & Dispatch',
+    btn_confirmed_state: '✓ Approved & Dispatched',
+    card5_title: 'Voucher',
     ticket_number_prefix: 'Ticket #: ',
-    ticket_status_label: 'Ticket Status:',
+    ticket_status_label: 'Status:',
     ticket_status_created: 'Dispatched & Created',
-    ticket_type_label: 'Ticket Type:',
+    ticket_type_label: 'Category:',
     ticket_linked_order: 'Linked Order:',
-    ticket_confirmed_by: 'Staff ID:',
+    ticket_confirmed_by: 'Reviewer:',
     ticket_confirmed_at: 'Approved At:',
     ticket_resolution_label: 'Approved Resolution:',
     ticket_idempotency_key: 'Idempotency Key:',
     none_value: 'None',
-    card6_title: 'Operation Audit Trail & Flow',
+    card6_title: 'Audit Trail',
     trace_nodes_count: '{count} Nodes Total',
     trace_in: 'Input:',
     trace_out: 'Output:',
-    action_stt: 'Audio Transcription',
-    action_mask: 'Privacy Masking',
+    action_stt: 'Transcription',
+    action_mask: 'Masking',
     action_policy: 'Policy Search',
     action_order: 'Order Verification',
     action_ticket: 'Ticket Dispatch',
@@ -876,7 +828,6 @@ const selectSession = async (s: any) => {
     traces.value = res.data.traces || []
 
     if (res.data.work_orders && res.data.work_orders.length > 0) {
-      // 已经接单建单的会话：完整还原工单与初审依据
       currentWorkOrder.value = res.data.work_orders[0]
       proposalBuffer.value = currentWorkOrder.value.solution_proposal || ''
       agentResult.value = {
@@ -888,7 +839,6 @@ const selectSession = async (s: any) => {
         order_data: null
       }
 
-      // 如果有关联订单号，尝试拉取关联订单详情进行呈现
       if (currentWorkOrder.value.order_id) {
         try {
           const ordRes = await axios.get(`${API_BASE}/orders/${currentWorkOrder.value.order_id}`)

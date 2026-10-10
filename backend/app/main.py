@@ -14,6 +14,7 @@ from backend.app.api.api_orders import router as orders_router
 from backend.app.api.api_work_orders import router as work_orders_router
 from backend.app.api.api_webhook import router as webhook_router
 from backend.app.api.api_health import router as health_router
+from backend.app.guide_html import generate_guide_html
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -97,6 +98,14 @@ def backend_gateway_dashboard():
               </svg>
               <span id="lang-text">English</span>
             </button>
+
+            <!-- Manual & Docs -->
+            <a href="/guide" id="nav-guide-btn" class="px-3.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg transition border border-slate-200/80 flex items-center space-x-1.5">
+              <svg class="w-3.5 h-3.5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+              </svg>
+              <span id="nav-guide-text">业务操作手册</span>
+            </a>
 
             <a href="/docs" id="nav-docs-btn" class="px-3.5 py-1.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-lg transition shadow-xs flex items-center space-x-1.5">
               <span id="nav-docs-text">交互式接口规范</span>
@@ -211,17 +220,17 @@ def backend_gateway_dashboard():
             <p id="quick-sub" class="text-xs text-slate-500 mt-0.5">可直接通过交互式规范或前端工作台进行联调</p>
           </div>
           <div class="flex items-center space-x-3">
-            <a href="http://localhost:3002" target="_blank" class="px-3.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg transition border border-slate-200 flex items-center space-x-1.5">
+            <a href="http://localhost:3000" target="_blank" class="px-3.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg transition border border-slate-200 flex items-center space-x-1.5">
               <span id="quick-front-text">前往前端工作台</span>
               <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
               </svg>
             </a>
-            <a href="/swagger" id="quick-swagger-text" class="px-3.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg transition border border-slate-200">
-              经典规范视图
+            <a href="/guide" id="quick-guide-text" class="px-3.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg transition border border-slate-200">
+              业务操作手册
             </a>
             <a href="/docs" id="quick-scalar-text" class="px-3.5 py-1.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-lg transition">
-              现代接口文档
+              接口调试文档
             </a>
           </div>
         </div>
@@ -264,8 +273,9 @@ def backend_gateway_dashboard():
             quick_title: "开发与测试快速入口",
             quick_sub: "可直接通过交互式规范或前端工作台进行联调",
             quick_front_text: "前往前端工作台",
-            quick_swagger_text: "经典规范视图",
-            quick_scalar_text: "现代接口文档",
+            nav_guide_text: "业务操作手册",
+            quick_guide_text: "业务操作手册",
+            quick_scalar_text: "接口调试文档",
             footer_text: "VoiceOps 售后服务平台 · 企业级工单与流转中枢"
           },
           en: {
@@ -298,8 +308,9 @@ def backend_gateway_dashboard():
             quick_title: "Quick Access & Developer Portal",
             quick_sub: "Interact with the system via interactive API docs or the staff console",
             quick_front_text: "Open Staff Console",
-            quick_swagger_text: "Classic Swagger View",
-            quick_scalar_text: "Modern Scalar Docs",
+            nav_guide_text: "Operations Manual",
+            quick_guide_text: "Operations Manual",
+            quick_scalar_text: "API Documentation",
             footer_text: "VoiceOps Service Platform · Enterprise Work Order Dispatch Hub"
           }
         };
@@ -312,6 +323,7 @@ def backend_gateway_dashboard():
           document.getElementById('nav-title').innerText = dict.nav_title;
           document.getElementById('nav-sub').innerText = dict.nav_sub;
           document.getElementById('lang-text').innerText = dict.lang_btn;
+          if (document.getElementById('nav-guide-text')) document.getElementById('nav-guide-text').innerText = dict.nav_guide_text;
           document.getElementById('nav-docs-text').innerText = dict.nav_docs_text;
           document.getElementById('banner-title').innerText = dict.banner_title;
           document.getElementById('banner-sub').innerText = dict.banner_sub;
@@ -337,7 +349,7 @@ def backend_gateway_dashboard():
           document.getElementById('quick-title').innerText = dict.quick_title;
           document.getElementById('quick-sub').innerText = dict.quick_sub;
           document.getElementById('quick-front-text').innerText = dict.quick_front_text;
-          document.getElementById('quick-swagger-text').innerText = dict.quick_swagger_text;
+          if (document.getElementById('quick-guide-text')) document.getElementById('quick-guide-text').innerText = dict.quick_guide_text;
           document.getElementById('quick-scalar-text').innerText = dict.quick_scalar_text;
           document.getElementById('footer-text').innerText = dict.footer_text;
         }
@@ -374,3 +386,9 @@ def swagger_docs():
         title="VoiceOps - Swagger API 规范",
         swagger_favicon_url="https://fastapi.tiangolo.com/img/favicon.png"
     )
+
+@app.get("/guide", response_class=HTMLResponse, include_in_schema=False)
+def operations_guide():
+    """提供纯净、无AI术语、支持中英双语切换的业务操作指南与操作手册"""
+    return generate_guide_html()
+

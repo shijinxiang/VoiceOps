@@ -61,6 +61,29 @@
             <span class="font-semibold text-slate-700">{{ t('session_list_title') }}</span>
             <span class="px-1.5 py-0.5 rounded text-[11px] font-medium bg-slate-100 text-slate-600">{{ filteredSessions.length }} {{ t('items_unit') }}</span>
           </div>
+
+          <!-- Filter Tabs -->
+          <div class="flex items-center p-0.5 bg-slate-100 rounded-lg text-[11px] font-medium text-slate-600">
+            <button 
+              @click="statusFilter = 'all'" 
+              :class="['flex-1 py-1 rounded-md transition text-center', statusFilter === 'all' ? 'bg-white text-slate-900 shadow-2xs font-semibold' : 'hover:text-slate-900']"
+            >
+              {{ t('filter_all') }}
+            </button>
+            <button 
+              @click="statusFilter = 'pending'" 
+              :class="['flex-1 py-1 rounded-md transition text-center', statusFilter === 'pending' ? 'bg-white text-slate-900 shadow-2xs font-semibold' : 'hover:text-slate-900']"
+            >
+              {{ t('filter_pending') }}
+            </button>
+            <button 
+              @click="statusFilter = 'completed'" 
+              :class="['flex-1 py-1 rounded-md transition text-center', statusFilter === 'completed' ? 'bg-white text-slate-900 shadow-2xs font-semibold' : 'hover:text-slate-900']"
+            >
+              {{ t('filter_completed') }}
+            </button>
+          </div>
+
           <div class="relative">
             <svg class="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -132,6 +155,21 @@
         </div>
 
         <template v-else>
+          <!-- Completed Work Order Top Banner (if already completed) -->
+          <div v-if="currentWorkOrder" class="bg-emerald-50/80 border border-emerald-200/90 rounded-xl p-3.5 flex items-center justify-between text-xs text-emerald-800 shadow-2xs">
+            <div class="flex items-center space-x-2">
+              <span class="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-[10px]">✓</span>
+              <span>
+                {{ t('session_completed_banner_prefix') }}
+                <strong class="font-mono">{{ currentWorkOrder.ticket_number }}</strong>
+                {{ t('session_completed_banner_suffix') }}
+              </span>
+            </div>
+            <span class="font-mono text-emerald-700 bg-white/80 px-2 py-0.5 rounded border border-emerald-200 text-[11px]">
+              {{ currentWorkOrder.confirmed_by || 'Staff #1042' }}
+            </span>
+          </div>
+
           <!-- Session Header Card -->
           <div class="bg-white border border-slate-200/90 rounded-xl p-4 shadow-xs flex flex-wrap items-center justify-between gap-4">
             <div class="space-y-1">
@@ -408,31 +446,32 @@
                 <textarea 
                   v-model="proposalBuffer" 
                   rows="2"
-                  class="w-full bg-slate-50 border border-slate-300 rounded-lg p-3 text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-slate-900 focus:bg-white leading-relaxed"
+                  :disabled="currentWorkOrder?.status === 'CONFIRMED' || currentWorkOrder?.status === 'completed'"
+                  class="w-full bg-slate-50 border border-slate-300 rounded-lg p-3 text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-slate-900 focus:bg-white leading-relaxed disabled:opacity-75"
                 ></textarea>
               </div>
 
               <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
                 <div class="text-xs text-slate-500">
-                  {{ t('card4_operator') }}
+                  {{ t('card4_operator') }}: <span class="font-semibold text-slate-800">{{ currentWorkOrder?.confirmed_by || 'Staff #1042' }}</span>
                 </div>
 
                 <button 
                   @click="confirmWorkOrder" 
-                  :disabled="isConfirming || currentWorkOrder?.status === 'CONFIRMED'"
-                  class="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 disabled:bg-emerald-600 disabled:opacity-90 text-white font-semibold text-xs rounded-lg shadow-xs transition flex items-center space-x-1.5"
+                  :disabled="isConfirming || currentWorkOrder?.status === 'CONFIRMED' || currentWorkOrder?.status === 'completed'"
+                  class="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 disabled:bg-emerald-600 disabled:opacity-95 text-white font-semibold text-xs rounded-lg shadow-xs transition flex items-center space-x-1.5"
                 >
                   <svg v-if="isConfirming" class="animate-spin -ml-0.5 mr-1 h-3.5 w-3.5 text-white" fill="none" viewBox="0 0 24 24">
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
                   </svg>
-                  <span>{{ currentWorkOrder?.status === 'CONFIRMED' ? t('btn_confirmed_state') : t('btn_confirm_ticket') }}</span>
+                  <span>{{ currentWorkOrder ? t('btn_confirmed_state') : t('btn_confirm_ticket') }}</span>
                 </button>
               </div>
             </div>
           </div>
 
-          <!-- Step 5: Confirmed Work Order Details -->
+          <!-- Step 5: Confirmed Work Order Details (Always visible if work order exists) -->
           <div v-if="currentWorkOrder" class="bg-white border border-slate-200/90 rounded-xl p-5 shadow-xs space-y-4">
             <div class="flex items-center justify-between pb-3 border-b border-slate-100">
               <div class="flex items-center space-x-2">
@@ -444,19 +483,34 @@
               </span>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 text-xs">
               <div class="bg-slate-50 p-3 rounded-lg border border-slate-200/80">
                 <span class="text-slate-500">{{ t('ticket_status_label') }}</span>
                 <p class="text-emerald-700 font-bold mt-1 text-xs">{{ t('ticket_status_created') }} ({{ currentWorkOrder.status }})</p>
+              </div>
+              <div class="bg-slate-50 p-3 rounded-lg border border-slate-200/80">
+                <span class="text-slate-500">{{ t('ticket_type_label') }}</span>
+                <p class="text-slate-900 font-semibold mt-1">{{ intentText(currentWorkOrder.ticket_type) }}</p>
               </div>
               <div class="bg-slate-50 p-3 rounded-lg border border-slate-200/80">
                 <span class="text-slate-500">{{ t('ticket_linked_order') }}</span>
                 <p class="text-slate-800 font-mono font-semibold mt-1">{{ currentWorkOrder.order_id || t('none_value') }}</p>
               </div>
               <div class="bg-slate-50 p-3 rounded-lg border border-slate-200/80">
-                <span class="text-slate-500">{{ t('ticket_idempotency_key') }}</span>
-                <p class="text-slate-500 font-mono truncate mt-1 text-[11px]">{{ currentWorkOrder.idempotency_key }}</p>
+                <span class="text-slate-500">{{ t('ticket_confirmed_by') }}</span>
+                <p class="text-slate-800 font-medium mt-1">{{ currentWorkOrder.confirmed_by || 'Staff #1042' }}</p>
               </div>
+            </div>
+
+            <!-- Approved Solution Content in Voucher -->
+            <div class="bg-slate-50/80 p-3 rounded-lg border border-slate-200/80 text-xs">
+              <span class="text-slate-500 font-medium block mb-1">{{ t('ticket_resolution_label') }}</span>
+              <p class="text-slate-800 leading-relaxed">{{ currentWorkOrder.solution_proposal }}</p>
+            </div>
+
+            <div class="flex items-center justify-between text-[11px] text-slate-400 pt-1">
+              <span>{{ t('ticket_idempotency_key') }} <code class="font-mono">{{ currentWorkOrder.idempotency_key }}</code></span>
+              <span>{{ t('ticket_confirmed_at') }} {{ formatDate(currentWorkOrder.confirmed_at || currentWorkOrder.created_at) }}</span>
             </div>
           </div>
 
@@ -517,6 +571,9 @@ const messages = {
     btn_new_session: '录入新会话',
     session_list_title: '售后会话列表',
     items_unit: '项',
+    filter_all: '全部',
+    filter_pending: '待审核',
+    filter_completed: '已结单',
     search_placeholder: '搜索编号、客户姓名或手机号...',
     no_sessions_found: '暂无匹配的会话记录',
     status_completed: '已结单',
@@ -529,6 +586,8 @@ const messages = {
     channel_voice: '电话热线',
     empty_select_prompt: '请选择左侧会话或点击上方录入新会话',
     empty_select_sub: '支持录音速记、政策合规核对、订单查询与工单审批全流程',
+    session_completed_banner_prefix: '该售后会话已完成坐席审核建单，流转凭证号为：',
+    session_completed_banner_suffix: '，已触发流转调度通知。',
     customer_profile: '客户档案: ',
     contact_phone: '联系电话: ',
     created_time: '录入时间: ',
@@ -575,14 +634,18 @@ const messages = {
     card4_title: '坐席人工审核建单',
     card4_sub: '必须经客服终审确认 · 防误操作门禁',
     card4_proposal_label: '拟定处置方案与审批结论（可直接调整）:',
-    card4_operator: '审核坐席: 客服工号 1042',
+    card4_operator: '审核坐席',
     btn_confirm_ticket: '审核通过，正式建单并触发流转通知',
     btn_confirmed_state: '✓ 工单已审批建单并派发通知',
     card5_title: '工单流转凭证',
     ticket_number_prefix: '工单号: ',
     ticket_status_label: '工单当前状态:',
     ticket_status_created: '已派发已建单',
+    ticket_type_label: '工单业务类型:',
     ticket_linked_order: '关联业务订单:',
+    ticket_confirmed_by: '审核坐席工号:',
+    ticket_confirmed_at: '审批完成时间:',
+    ticket_resolution_label: '已确认处置方案结论:',
     ticket_idempotency_key: '防重事务标识:',
     none_value: '无',
     card6_title: '系统操作流水与流转轨迹',
@@ -608,6 +671,9 @@ const messages = {
     btn_new_session: 'New Session',
     session_list_title: 'Customer Sessions',
     items_unit: 'items',
+    filter_all: 'All',
+    filter_pending: 'Pending',
+    filter_completed: 'Completed',
     search_placeholder: 'Search code, customer name or phone...',
     no_sessions_found: 'No matching sessions found',
     status_completed: 'Completed',
@@ -620,6 +686,8 @@ const messages = {
     channel_voice: 'Voice Hotline',
     empty_select_prompt: 'Select a session or create a new one to begin',
     empty_select_sub: 'Complete workflow for audio memo, policy check, order query, and ticket approval',
+    session_completed_banner_prefix: 'This session has been approved and dispatched, ticket voucher: ',
+    session_completed_banner_suffix: ', notification triggered.',
     customer_profile: 'Customer: ',
     contact_phone: 'Phone: ',
     created_time: 'Created: ',
@@ -666,14 +734,18 @@ const messages = {
     card4_title: 'Staff Review & Approval',
     card4_sub: 'Mandatory Human Approval Gate · Error Prevention',
     card4_proposal_label: 'Proposed Resolution & Approval Note (Editable):',
-    card4_operator: 'Reviewer: Staff #1042',
+    card4_operator: 'Reviewer',
     btn_confirm_ticket: 'Approve & Dispatch Work Order',
     btn_confirmed_state: '✓ Work Order Approved & Dispatched',
     card5_title: 'Work Order Voucher',
     ticket_number_prefix: 'Ticket #: ',
     ticket_status_label: 'Ticket Status:',
     ticket_status_created: 'Dispatched & Created',
+    ticket_type_label: 'Ticket Type:',
     ticket_linked_order: 'Linked Order:',
+    ticket_confirmed_by: 'Staff ID:',
+    ticket_confirmed_at: 'Approved At:',
+    ticket_resolution_label: 'Approved Resolution:',
     ticket_idempotency_key: 'Idempotency Key:',
     none_value: 'None',
     card6_title: 'Operation Audit Trail & Flow',
@@ -719,6 +791,7 @@ const agentResult = ref<any>(null)
 const currentWorkOrder = ref<any>(null)
 const traces = ref<any[]>([])
 const searchQuery = ref('')
+const statusFilter = ref<'all' | 'pending' | 'completed'>('all')
 
 const isTranscribing = ref(false)
 const isAnalyzing = ref(false)
@@ -728,9 +801,19 @@ const editBuffer = ref('')
 const proposalBuffer = ref('')
 
 const filteredSessions = computed(() => {
-  if (!searchQuery.value.trim()) return sessions.value
+  let list = sessions.value
+  
+  // Status filter
+  if (statusFilter.value === 'pending') {
+    list = list.filter(s => s.status !== 'completed')
+  } else if (statusFilter.value === 'completed') {
+    list = list.filter(s => s.status === 'completed')
+  }
+
+  // Search filter
+  if (!searchQuery.value.trim()) return list
   const q = searchQuery.value.toLowerCase()
-  return sessions.value.filter(s => 
+  return list.filter(s => 
     (s.session_code && s.session_code.toLowerCase().includes(q)) ||
     (s.customer_name_masked && s.customer_name_masked.includes(q)) ||
     (s.customer_phone_masked && s.customer_phone_masked.includes(q))
@@ -753,12 +836,12 @@ const channelText = (ch: string) => {
 }
 
 const intentText = (intent: string) => {
-  switch (intent) {
-    case 'return_goods': return t('intent_return')
-    case 'repair_goods': return t('intent_repair')
-    case 'logistics_inquiry': return t('intent_logistics')
-    default: return intent ? t('intent_other') : t('intent_other')
-  }
+  if (!intent) return t('intent_other')
+  const i = intent.toLowerCase()
+  if (i.includes('return')) return t('intent_return')
+  if (i.includes('repair')) return t('intent_repair')
+  if (i.includes('logistics')) return t('intent_logistics')
+  return t('intent_other')
 }
 
 const actionTypeText = (type: string) => {
@@ -791,11 +874,35 @@ const selectSession = async (s: any) => {
     audioFiles.value = res.data.audio_files || []
     transcriptions.value = res.data.transcriptions || []
     traces.value = res.data.traces || []
+
     if (res.data.work_orders && res.data.work_orders.length > 0) {
+      // 已经接单建单的会话：完整还原工单与初审依据
       currentWorkOrder.value = res.data.work_orders[0]
+      proposalBuffer.value = currentWorkOrder.value.solution_proposal || ''
+      agentResult.value = {
+        intent: currentWorkOrder.value.ticket_type ? currentWorkOrder.value.ticket_type.toLowerCase() : '',
+        ticket_type: currentWorkOrder.value.ticket_type,
+        order_id: currentWorkOrder.value.order_id,
+        proposal: currentWorkOrder.value.solution_proposal,
+        citations: currentWorkOrder.value.policy_citation || [],
+        order_data: null
+      }
+
+      // 如果有关联订单号，尝试拉取关联订单详情进行呈现
+      if (currentWorkOrder.value.order_id) {
+        try {
+          const ordRes = await axios.get(`${API_BASE}/orders/${currentWorkOrder.value.order_id}`)
+          if (agentResult.value) {
+            agentResult.value.order_data = ordRes.data
+          }
+        } catch (_) {}
+      }
     } else {
       currentWorkOrder.value = null
+      agentResult.value = null
+      proposalBuffer.value = ''
     }
+
     if (transcriptions.value.length > 0) {
       editBuffer.value = transcriptions.value[0].edited_text || transcriptions.value[0].masked_text
     }

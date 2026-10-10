@@ -355,50 +355,22 @@ def backend_gateway_dashboard():
     </html>
     """
 
-@app.get("/docs", response_class=HTMLResponse, include_in_schema=False)
-def modern_scalar_api_docs():
-    """提供纯净现代美学 API 交互式文档 (Scalar)"""
-    return """
-    <!doctype html>
-    <html lang="zh-CN">
-      <head>
-        <title>VoiceOps API</title>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-        <style>
-          body {
-            margin: 0;
-            font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif !important;
-          }
-        </style>
-      </head>
-      <body>
-        <script
-          id="api-reference"
-          data-url="/openapi.json"
-          data-configuration='{
-            "theme": "default",
-            "layout": "modern",
-            "showSidebar": true,
-            "searchHotKey": "k",
-            "metaData": {
-              "title": "VoiceOps API"
-            }
-          }'
-        ></script>
-        <script src="https://cdn.jsdelivr.net/npm/@scalar/api-reference"></script>
-      </body>
-    </html>
-    """
+@app.get("/docs", include_in_schema=False)
+def api_docs():
+    """提供纯净、完全自托管、无需任何外部账号登录的接口交互文档"""
+    return get_swagger_ui_html(
+        openapi_url="/openapi.json",
+        title="VoiceOps - API 接口规范与调试文档",
+        swagger_favicon_url="https://fastapi.tiangolo.com/img/favicon.png",
+        swagger_js_url="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui-bundle.js",
+        swagger_css_url="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui.css"
+    )
 
 @app.get("/swagger", include_in_schema=False)
 def swagger_docs():
-    """提供经典 Swagger 视图"""
+    """经典接口视图"""
     return get_swagger_ui_html(
         openapi_url="/openapi.json",
-        title="VoiceOps - API 规范",
+        title="VoiceOps - Swagger API 规范",
         swagger_favicon_url="https://fastapi.tiangolo.com/img/favicon.png"
     )

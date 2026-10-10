@@ -1,7 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
-from fastapi.openapi.docs import get_swagger_ui_html
 from contextlib import asynccontextmanager
 
 from backend.app.config import settings
@@ -15,6 +14,7 @@ from backend.app.api.api_work_orders import router as work_orders_router
 from backend.app.api.api_webhook import router as webhook_router
 from backend.app.api.api_health import router as health_router
 from backend.app.guide_html import generate_guide_html
+from backend.app.docs_html import generate_docs_html
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -367,25 +367,20 @@ def backend_gateway_dashboard():
     </html>
     """
 
-@app.get("/docs", include_in_schema=False)
+@app.get("/docs", response_class=HTMLResponse, include_in_schema=False)
 def api_docs():
-    """提供纯净、完全自托管、无需任何外部账号登录的接口交互文档"""
-    return get_swagger_ui_html(
-        openapi_url="/openapi.json",
-        title="VoiceOps - API 接口规范与调试文档",
-        swagger_favicon_url="https://fastapi.tiangolo.com/img/favicon.png",
-        swagger_js_url="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui-bundle.js",
-        swagger_css_url="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui.css"
-    )
+    """提供纯净、现代商务风格的高颜值接口交互调试与三栏规范文档"""
+    return generate_docs_html()
 
-@app.get("/swagger", include_in_schema=False)
+@app.get("/swagger", response_class=HTMLResponse, include_in_schema=False)
 def swagger_docs():
-    """经典接口视图"""
-    return get_swagger_ui_html(
-        openapi_url="/openapi.json",
-        title="VoiceOps - Swagger API 规范",
-        swagger_favicon_url="https://fastapi.tiangolo.com/img/favicon.png"
-    )
+    """经典接口视图兼容"""
+    return generate_docs_html()
+
+@app.get("/redoc", response_class=HTMLResponse, include_in_schema=False)
+def redoc_docs():
+    """规整三栏接口规范视图"""
+    return generate_docs_html()
 
 @app.get("/guide", response_class=HTMLResponse, include_in_schema=False)
 def operations_guide():
